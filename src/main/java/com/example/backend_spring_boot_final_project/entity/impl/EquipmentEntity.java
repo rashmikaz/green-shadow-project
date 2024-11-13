@@ -1,0 +1,28 @@
+package com.example.backend_spring_boot_final_project.entity.impl;
+
+import ch.qos.logback.core.status.Status;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Entity
+@Table(name = "equipment")
+public class EquipmentEntity {
+    @Id
+    private String equipment_id;
+    private String name;
+    @Enumerated(EnumType.STRING)
+    private EquipmentType type;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private StaffEntity assigned_staff;
+    @ManyToOne
+    @JoinColumn(name = "field_code")
+    private FieldEntity assigned_field;
+}
