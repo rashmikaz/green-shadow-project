@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.dto.impl;
 
+import com.example.backend_spring_boot_final_project.dto.CropStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CropDto {
+public class CropDTO implements CropStatus {
     private String crop_code;
     private String common_name;
     private String scientific_name;
