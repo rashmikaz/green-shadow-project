@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("api/v1/crop")
@@ -79,5 +81,10 @@ public class CropController {
         }
 
         return cropService.getCrop(crop_code);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CropDTO>getAllCrops(){
+        return cropService.getAllCrops();
     }
 }

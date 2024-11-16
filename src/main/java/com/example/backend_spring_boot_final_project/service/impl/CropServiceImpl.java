@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class CropServiceImpl implements CropService {
@@ -43,5 +45,11 @@ public class CropServiceImpl implements CropService {
         }else {
             return new SelectedErrorStatus(2,"Selected crop does not exist");
         }
+    }
+
+
+    @Override
+    public List<CropDTO>getAllCrops(){
+        return mapping.toCropDTOList(cropDao.findAll());
     }
 }
