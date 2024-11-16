@@ -3,6 +3,7 @@ package com.example.backend_spring_boot_final_project.controller;
 import com.example.backend_spring_boot_final_project.dto.CropStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
+import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.CropService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
@@ -87,4 +88,26 @@ public class CropController {
     public List<CropDTO>getAllCrops(){
         return cropService.getAllCrops();
     }
+
+    @DeleteMapping(value = "/{cropCode}")
+    public ResponseEntity<Void>deleteCrop(@PathVariable("crop_code") String crop_code){
+        try {
+            if(!Regex.cropCodeMatcher(crop_code)){
+                logger.error("Crop code is not valid delete");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            cropService.deleteCrop(crop_code);
+            logger.info("Delete crop success");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (CropNotFoundException e){
+            e.printStackTrace();
+            logger.warn("Crop not found to delete",e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("Crop delete failed",e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
