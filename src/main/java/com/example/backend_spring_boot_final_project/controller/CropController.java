@@ -3,6 +3,7 @@ package com.example.backend_spring_boot_final_project.controller;
 import com.example.backend_spring_boot_final_project.dto.CropStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
+import com.example.backend_spring_boot_final_project.entity.impl.CropEntity;
 import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.CropService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -41,7 +43,7 @@ public class CropController {
 
 
     ){
-        String base64CropImage = "";
+//        String base64CropImage = "";
 
         try {
 //            byte[] bytesCropImage = cropImage.getBytes();
@@ -74,7 +76,7 @@ public class CropController {
     }
 
     @GetMapping(value = "/{cropCode}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public CropStatus getSelectedCrop(@PathVariable("crop_code") String crop_code){
+    public CropStatus getSelectedCrop(@PathVariable("cropCode") String crop_code){
 
         if (!Regex.cropCodeMatcher(crop_code)){
             logger.error("Crop code is not valid get crop");
@@ -90,7 +92,7 @@ public class CropController {
     }
 
     @DeleteMapping(value = "/{cropCode}")
-    public ResponseEntity<Void>deleteCrop(@PathVariable("crop_code") String crop_code){
+    public ResponseEntity<Void>deleteCrop(@PathVariable("cropCode") String crop_code){
         try {
             if(!Regex.cropCodeMatcher(crop_code)){
                 logger.error("Crop code is not valid delete");
@@ -108,6 +110,29 @@ public class CropController {
             logger.error("Crop delete failed",e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    @PutMapping(value = "/{cropCode}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void>updateCrop(@PathVariable("cropCode") String cropCode ,@RequestBody CropDTO cropDTO){
+        try {
+            if(!Regex.cropCodeMatcher(cropCode) || cropDTO ==null){
+                logger.error("Crop code is not valid to update");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            cropService.updateCrop(cropCode, cropDTO);
+            logger.info("Update crop success");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (CropNotFoundException e){
+            e.printStackTrace();
+            logger.warn("Crop not found update",e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("Crop update failed",e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 }

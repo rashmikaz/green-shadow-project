@@ -58,10 +58,26 @@ public class CropServiceImpl implements CropService {
     @Override
     public void deleteCrop(String cropCode) {
         Optional<CropEntity> foundCrop = cropDao.findById(cropCode);
-        if(foundCrop.isPresent()) {
+        if(!foundCrop.isPresent()) {
             throw new CropNotFoundException("Crop not found");
         }else {
             cropDao.deleteById(cropCode);
+        }
+    }
+
+   @Override
+    public void updateCrop(String cropCode, CropDTO cropDTO){
+        Optional<CropEntity> tmpCrop = cropDao.findById(cropCode);
+        if(!tmpCrop.isPresent()) {
+            throw new CropNotFoundException("Crop not found");
+        }else {
+            tmpCrop.get().setCommon_name(cropDTO.getCommon_name());
+            tmpCrop.get().setScientific_name(cropDTO.getScientific_name());
+//            tmpCrop.get().setCrop_image(cropDTO.getCrop_image());
+            tmpCrop.get().setCategory(cropDTO.getCategory());
+            tmpCrop.get().setSeason(cropDTO.getSeason());
+//            FieldEntity fieldEntity = mapping.toFieldEntity(cropDTO.getField());
+//            tmpCrop.get().setField(fieldEntity);
         }
     }
 }
