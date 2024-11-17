@@ -1,5 +1,7 @@
 package com.example.backend_spring_boot_final_project.entity.impl;
 
+import com.example.backend_spring_boot_final_project.entity.Designation;
+import com.example.backend_spring_boot_final_project.entity.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,10 +32,10 @@ public class StaffEntity {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany
-    @JoinTable(name = "Field_Staff_assignment",joinColumns = @JoinColumn(name = "staff_id"),
-            inverseJoinColumns = @JoinColumn(name = "field_code"))
-    private List<FieldEntity> fields;
-    @OneToMany(mappedBy = "assigned_staff",cascade = CascadeType.ALL)
-    private List<VehicleEntity> vehicles;
+//    @ManyToMany
+//    @JoinTable(name = "Field_Staff_assignment",joinColumns = @JoinColumn(name = "staff_id"),
+//            inverseJoinColumns = @JoinColumn(name = "field_code"))
+//    private List<FieldEntity> fields;
+//    @OneToMany(mappedBy = "assigned_staff",cascade = CascadeType.ALL)
+//    private List<VehicleEntity> vehicles;
 }
