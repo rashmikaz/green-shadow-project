@@ -1,13 +1,15 @@
 package com.example.backend_spring_boot_final_project.entity.impl;
 
-import com.example.backend_spring_boot_final_project.entity.Designation;
+
 import com.example.backend_spring_boot_final_project.entity.Gender;
+import com.example.backend_spring_boot_final_project.entity.Role;
+import com.example.backend_spring_boot_final_project.entity.SuperEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.management.relation.Role;
+
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,19 +17,22 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "staff")
-public class StaffEntity {
+public class StaffEntity implements SuperEntity {
     @Id
-    private String id;
-    private String first_name;
-    private String last_name;
-    @Enumerated(EnumType.STRING)
-    private Designation designation;
+    private String staffId;
+    private String firstName;
+    private String lastName;
+    private String designation;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    private String joined_date;
+    private String joinedDate;
     private String dob;
-    private String address;
-    private String contact_no;
+    private String addressLine1;
+    private String addressLine2;
+    private String addressLine3;
+    private String addressLine4;
+    private String addressLine5;
+    private String contactNo;
     @Column(unique = true)
     private String email;
     @Enumerated(EnumType.STRING)
