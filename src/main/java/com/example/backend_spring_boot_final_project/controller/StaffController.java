@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.controller;
 
+import com.example.backend_spring_boot_final_project.dao.StaffDao;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.StaffService;
@@ -12,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/staff")
 //@CrossOrigin
@@ -19,6 +22,9 @@ public class StaffController {
 
    @Autowired
     private StaffService staffService;
+
+   @Autowired
+   private StaffDao staffDao;
 
     private static Logger logger = LoggerFactory.getLogger(StaffController.class);
 
@@ -49,6 +55,10 @@ public class StaffController {
         }
 
 
+    }
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<StaffDTO>getAllStaff(){
+        return staffService.getAllStaff();
     }
 
 }

@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class StaffServiceImpl implements StaffService {
@@ -29,6 +31,10 @@ public class StaffServiceImpl implements StaffService {
            throw new DataPersistException("Staff not saved");
        }
 
+    }
+    @Override
+    public List<StaffDTO> getAllStaff(){
+        return mapping.toStaffDTOList(staffDao.findAll());
     }
 
 }
