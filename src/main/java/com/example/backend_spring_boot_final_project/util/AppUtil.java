@@ -12,5 +12,9 @@ public class AppUtil {
         return "CROP-" + UUID.randomUUID();
     }
 
+    public static String generateStaffId(){
+        return "STAFF-" + UUID.randomUUID();
+    }
+
 
 }
