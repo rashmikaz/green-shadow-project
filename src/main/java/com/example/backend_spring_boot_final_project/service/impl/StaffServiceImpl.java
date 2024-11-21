@@ -1,10 +1,12 @@
 package com.example.backend_spring_boot_final_project.service.impl;
 
 import com.example.backend_spring_boot_final_project.dao.StaffDao;
+import com.example.backend_spring_boot_final_project.dto.StaffStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.StaffService;
+import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
 import com.example.backend_spring_boot_final_project.util.Mapping;
 import jakarta.transaction.Transactional;
@@ -35,6 +37,16 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public List<StaffDTO> getAllStaff(){
         return mapping.toStaffDTOList(staffDao.findAll());
+    }
+
+    @Override
+    public StaffStatus getstaff(String staffId) {
+        if (staffDao.existsById(staffId)) {
+            var selectedStaff = staffDao.getReferenceById(staffId);
+            return mapping.toStaffDTO(selectedStaff);
+        } else {
+            return new SelectedErrorStatus(2, "Selected staff id does not exist");
+        }
     }
 
 }

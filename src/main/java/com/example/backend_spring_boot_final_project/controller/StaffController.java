@@ -1,10 +1,14 @@
 package com.example.backend_spring_boot_final_project.controller;
 
 import com.example.backend_spring_boot_final_project.dao.StaffDao;
+import com.example.backend_spring_boot_final_project.dto.CropStatus;
+import com.example.backend_spring_boot_final_project.dto.StaffStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.StaffService;
+import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
+import com.example.backend_spring_boot_final_project.util.Regex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +63,18 @@ public class StaffController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<StaffDTO>getAllStaff(){
         return staffService.getAllStaff();
+    }
+
+
+    @GetMapping(value = "/{staffCode}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public StaffStatus getSelectedStaff(@PathVariable("staffCode") String staffId){
+
+        if (!Regex.staffIdMatcher(staffId)){
+            logger.error("Staff id is not valid get staff");
+            return new SelectedErrorStatus(1,"id not valid");
+        }
+
+        return staffService.getstaff(staffId);
     }
 
 }

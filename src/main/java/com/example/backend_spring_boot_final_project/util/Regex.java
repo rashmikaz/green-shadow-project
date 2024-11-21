@@ -8,4 +8,10 @@ public class Regex {
         Pattern regexPattern = Pattern.compile(regexForCropCode);
         return regexPattern.matcher(cropCode).matches();
     }
+
+    public static boolean staffIdMatcher(String id) {
+        String regexForStaffId = "^STAFF-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForStaffId);
+        return regexPattern.matcher(id).matches();
+    }
 }

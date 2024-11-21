@@ -2,6 +2,8 @@ package com.example.backend_spring_boot_final_project.dto.impl;
 
 
 
+import com.example.backend_spring_boot_final_project.dto.CropStatus;
+import com.example.backend_spring_boot_final_project.dto.StaffStatus;
 import com.example.backend_spring_boot_final_project.entity.Gender;
 import com.example.backend_spring_boot_final_project.entity.Role;
 import lombok.AllArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class StaffDTO {
+public class StaffDTO implements StaffStatus {
     private String staffId;
     private String firstName;
     private String lastName;
