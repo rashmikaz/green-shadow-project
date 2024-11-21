@@ -11,4 +11,6 @@ public interface StaffService {
     List<StaffDTO> getAllStaff();
 
     StaffStatus getstaff(String staffId);
+
+    void deleteStaff(String staffId);
 }

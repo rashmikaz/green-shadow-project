@@ -4,7 +4,9 @@ import com.example.backend_spring_boot_final_project.dao.StaffDao;
 import com.example.backend_spring_boot_final_project.dto.CropStatus;
 import com.example.backend_spring_boot_final_project.dto.StaffStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
+import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
+import com.example.backend_spring_boot_final_project.exception.StaffNotFoundException;
 import com.example.backend_spring_boot_final_project.service.StaffService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
@@ -27,8 +29,6 @@ public class StaffController {
    @Autowired
     private StaffService staffService;
 
-   @Autowired
-   private StaffDao staffDao;
 
     private static Logger logger = LoggerFactory.getLogger(StaffController.class);
 
@@ -66,8 +66,8 @@ public class StaffController {
     }
 
 
-    @GetMapping(value = "/{staffCode}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public StaffStatus getSelectedStaff(@PathVariable("staffCode") String staffId){
+    @GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public StaffStatus getSelectedStaff(@PathVariable("id") String staffId){
 
         if (!Regex.staffIdMatcher(staffId)){
             logger.error("Staff id is not valid get staff");
@@ -75,6 +75,24 @@ public class StaffController {
         }
 
         return staffService.getstaff(staffId);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void>deleteStaff(@PathVariable("id") String staffId){
+        try {
+            if(!Regex.staffIdMatcher(staffId)){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            staffService.deleteStaff(staffId);
+//            logger.info("staff deleted !");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (StaffNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

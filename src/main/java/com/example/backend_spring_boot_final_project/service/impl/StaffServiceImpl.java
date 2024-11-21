@@ -5,6 +5,7 @@ import com.example.backend_spring_boot_final_project.dto.StaffStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
+import com.example.backend_spring_boot_final_project.exception.StaffNotFoundException;
 import com.example.backend_spring_boot_final_project.service.StaffService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -48,5 +50,16 @@ public class StaffServiceImpl implements StaffService {
             return new SelectedErrorStatus(2, "Selected staff id does not exist");
         }
     }
+
+   @Override
+    public void deleteStaff(String staffId){
+        Optional<StaffEntity> foundStaff = staffDao.findById(staffId);
+        if (!foundStaff.isPresent()){
+            throw new StaffNotFoundException("Staff Member Not Found");
+        }else {
+            staffDao.deleteById(staffId);
+        }
+    }
+
 
 }
