@@ -36,20 +36,20 @@ public class CropController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void>saveCrop(@RequestPart("common_name") String commonName,
                                         @RequestPart("scientific_name") String scientificName,
-//                                        @RequestPart ("crop_image") MultipartFile cropImage,
+                                        @RequestPart ("crop_image") MultipartFile cropImage,
                                         @RequestPart ("category") String category,
                                         @RequestPart ("season") String season
 //                                        @RequestPart ("field") FieldDTO fieldDTO
 
 
     ){
-//        String base64CropImage = "";
+        String base64CropImage = "";
 
         try {
-//            byte[] bytesCropImage = cropImage.getBytes();
-//            base64CropImage = AppUtil.cropImageToBase64(bytesCropImage);
+            byte[] bytesCropImage = cropImage.getBytes();
+            base64CropImage = AppUtil.cropImageToBase64(bytesCropImage);
 
-//            generate crop id
+
             String crop_code = AppUtil.generateCropId();
 
             CropDTO buildCropDTO = new CropDTO();
@@ -57,12 +57,13 @@ public class CropController {
             buildCropDTO.setCrop_code(crop_code);
             buildCropDTO.setCommon_name(commonName);
             buildCropDTO.setScientific_name(scientificName);
-//            buildCropDTO.setCrop_image(base64CropImage);
+            buildCropDTO.setCrop_image(base64CropImage);
             buildCropDTO.setCategory(category);
             buildCropDTO.setSeason(season);
 //            buildCropDTO.setField(fieldDTO);
 
             cropService.saveCrop(buildCropDTO);
+
             return new ResponseEntity<>(HttpStatus.CREATED);
 
         } catch (DataPersistException e) {
