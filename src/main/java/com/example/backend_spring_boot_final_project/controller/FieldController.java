@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.controller;
 
+import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.FieldService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/field")
@@ -48,5 +50,10 @@ public class FieldController {
         }
 
 
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FieldDTO> getAllField(){
+        return fieldService.getAllField();
     }
 }
