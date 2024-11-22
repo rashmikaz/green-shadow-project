@@ -4,6 +4,7 @@ import com.example.backend_spring_boot_final_project.dao.FieldDao;
 import com.example.backend_spring_boot_final_project.dto.FieldStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
+import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -48,6 +50,16 @@ public class FieldServiceImpl implements FieldService {
             return mapping.toFieldDTO(selectedField);
         }else {
             return new SelectedErrorStatus(2,"Selected field does not exist");
+        }
+    }
+
+    @Override
+    public void deleteField(String fieldId) {
+        Optional<FieldEntity> foundField = fieldDao.findById(fieldId);
+        if(!foundField.isPresent()) {
+            throw new CropNotFoundException("field not found");
+        }else {
+            fieldDao.deleteById(fieldId);
         }
     }
 }
