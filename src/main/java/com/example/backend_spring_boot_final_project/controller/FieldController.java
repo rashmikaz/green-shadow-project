@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.util.List;
@@ -27,15 +28,27 @@ public class FieldController {
     @Autowired
     private FieldService fieldService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void>saveField(@RequestParam("field_name")String fieldName,
                                          @RequestParam("x") int x,
                                          @RequestParam("y") int y,
-                                         @RequestParam("extent_size") Double extentSize){
+                                         @RequestParam("extent_size") Double extentSize,
+                                         @RequestParam("crop_image_1")MultipartFile image1,
+                                         @RequestParam("crop_image_2")MultipartFile image2){
 
         Point location = new Point(x,y);
+        String base64FieldImage1 ="";
+        String base64FieldImage2 ="";
+
 
         try {
+            byte[] bytesFieldImage1 = image1.getBytes();
+            base64FieldImage1 = AppUtil.fieldImageOneToBase64(bytesFieldImage1);
+
+            byte[] bytesFieldImage2 = image2.getBytes();
+            base64FieldImage2 = AppUtil.fieldImageTwoToBase64(bytesFieldImage2);
+
+
             String field_code = AppUtil.generateFieldId();
 
             FieldDTO buildFieldDTO = new FieldDTO();
@@ -44,6 +57,9 @@ public class FieldController {
             buildFieldDTO.setField_name(fieldName);
             buildFieldDTO.setLocation(location);
             buildFieldDTO.setExtent_size(extentSize);
+            buildFieldDTO.setField_image1(base64FieldImage1);
+            buildFieldDTO.setField_image1(base64FieldImage2);
+
 
             fieldService.saveField(buildFieldDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);

@@ -19,10 +19,10 @@ public class FieldEntity implements SuperEntity {
     private String field_name;
     private Point location;
     private Double extent_size;
-//    @Column(columnDefinition = "LONGTEXT")
-//    private String field_image1;
-//    @Column(columnDefinition = "LONGTEXT")
-//    private String field_image2;
+    @Column(columnDefinition = "LONGTEXT")
+    private String field_image1;
+    @Column(columnDefinition = "LONGTEXT")
+    private String field_image2;
 //    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
 //    private List<CropEntity> crops;
 //    @ManyToMany(mappedBy = "fields")

@@ -20,6 +20,14 @@ public class AppUtil {
         return "FIELD-" + UUID.randomUUID();
     }
 
+    public static String fieldImageOneToBase64(byte [] fieldImage1){
+        return Base64.getEncoder().encodeToString(fieldImage1);
+    }
+
+    public static String fieldImageTwoToBase64(byte [] fieldImage2){
+        return Base64.getEncoder().encodeToString(fieldImage2);
+    }
+
 
 
 
