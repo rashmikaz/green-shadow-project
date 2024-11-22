@@ -16,5 +16,9 @@ public class AppUtil {
         return "STAFF-" + UUID.randomUUID();
     }
 
+    public static String generateFieldId(){
+        return "FIELD-" + UUID.randomUUID();
+    }
+
 
 }
