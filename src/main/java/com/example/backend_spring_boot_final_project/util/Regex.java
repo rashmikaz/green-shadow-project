@@ -14,4 +14,9 @@ public class Regex {
         Pattern regexPattern = Pattern.compile(regexForStaffId);
         return regexPattern.matcher(id).matches();
     }
+    public static boolean fieldCodeMatcher(String fieldCode) {
+        String regexForFieldCode = "^FIELD-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForFieldCode);
+        return regexPattern.matcher(fieldCode).matches();
+    }
 }

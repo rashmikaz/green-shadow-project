@@ -1,10 +1,12 @@
 package com.example.backend_spring_boot_final_project.service.impl;
 
 import com.example.backend_spring_boot_final_project.dao.FieldDao;
+import com.example.backend_spring_boot_final_project.dto.FieldStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.FieldService;
+import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
 import com.example.backend_spring_boot_final_project.util.Mapping;
 import jakarta.transaction.Transactional;
@@ -37,5 +39,15 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public List<FieldDTO> getAllField(){
         return mapping.toFieldDTOList(fieldDao.findAll());
+    }
+
+    @Override
+    public FieldStatus getField(String fieldId){
+        if(fieldDao.existsById(fieldId)) {
+            var selectedField = fieldDao.getReferenceById(fieldId);
+            return mapping.toFieldDTO(selectedField);
+        }else {
+            return new SelectedErrorStatus(2,"Selected field does not exist");
+        }
     }
 }
