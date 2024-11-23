@@ -20,6 +20,8 @@ public class AppUtil {
         return "FIELD-" + UUID.randomUUID();
     }
 
+    public static String generateVehicleId(){return "VEHICLE-" + UUID.randomUUID();}
+
     public static String fieldImageOneToBase64(byte [] fieldImage1){
         return Base64.getEncoder().encodeToString(fieldImage1);
     }

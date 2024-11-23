@@ -4,9 +4,11 @@ package com.example.backend_spring_boot_final_project.util;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
+import com.example.backend_spring_boot_final_project.dto.impl.VehicleDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.CropEntity;
 import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
 import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
+import com.example.backend_spring_boot_final_project.entity.impl.VehicleEntity;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,23 @@ public class Mapping {
     }
     public List<FieldEntity> toFieldEntityList(List<FieldDTO> fieldDTOList) {
         return modelMapper.map(fieldDTOList,new TypeToken<List<FieldEntity>>() {}.getType());
+    }
+
+    //for vehicle mapping
+    public VehicleEntity toVehicleEntity(VehicleDTO vehicleDTO) {
+        return modelMapper.map(vehicleDTO, VehicleEntity.class);
+    }
+
+    public VehicleDTO toVehicleDTO(VehicleEntity vehicleEntity) {
+        return modelMapper.map(vehicleEntity, VehicleDTO.class);
+    }
+
+    public List<VehicleDTO> toVehicleDTOList(List<VehicleEntity> vehicleEntitiesList) {
+        return modelMapper.map(vehicleEntitiesList,new TypeToken<List<VehicleDTO>>() {}.getType());
+    }
+
+    public List<VehicleEntity> toVehicleEntityList(List<VehicleDTO> vehicleDTOList){
+        return modelMapper.map(vehicleDTOList,new TypeToken<List<VehicleEntity>>() {}.getType());
     }
 
 
