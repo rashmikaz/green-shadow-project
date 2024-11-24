@@ -13,4 +13,6 @@ public interface FieldService {
     FieldStatus getField(String fieldId);
 
     void deleteField(String fieldId);
+
+    FieldDTO getFieldByName(String field_name);
 }

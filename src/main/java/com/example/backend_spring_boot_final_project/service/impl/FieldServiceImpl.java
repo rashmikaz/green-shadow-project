@@ -6,6 +6,7 @@ import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
 import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
+import com.example.backend_spring_boot_final_project.exception.FieldNotFoundException;
 import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
@@ -61,5 +62,14 @@ public class FieldServiceImpl implements FieldService {
         }else {
             fieldDao.deleteById(fieldId);
         }
+    }
+
+    @Override
+    public FieldDTO getFieldByName(String field_name) {
+        Optional<FieldEntity> tmpField = fieldDao.findByFieldName(field_name);
+        if(!tmpField.isPresent()){
+            throw new FieldNotFoundException("Field not found: " + field_name);
+        }
+        return mapping.toFieldDTO(tmpField.get());
     }
 }
