@@ -93,6 +93,18 @@ public class Mapping {
         return modelMapper.map(equipmentEntitiesList,new TypeToken<List<EquipmentDTO>>() {}.getType());
     }
 
+    //for user mapping
+    public UserEntity toUserEntity(UserDTO userDTO) {
+        return modelMapper.map(userDTO, UserEntity.class);
+    }
+
+    public UserDTO toUserDTO(UserEntity userEntity) {
+        return modelMapper.map(userEntity, UserDTO.class);
+    }
+
+    public List<UserDTO> toUserDTOList(List<UserEntity> userEntitiesList) {
+        return modelMapper.map(userEntitiesList,new TypeToken<List<UserDTO>>() {}.getType());
+    }
 
 
 }
