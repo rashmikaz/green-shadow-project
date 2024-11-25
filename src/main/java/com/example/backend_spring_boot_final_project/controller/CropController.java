@@ -52,8 +52,7 @@ public class CropController {
         String base64CropImage = "";
 
         try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            FieldDTO field = objectMapper.readValue(fieldDTO, FieldDTO.class);
+
            FieldDTO field = fieldService.getFieldByName(fieldDTO);
 
 

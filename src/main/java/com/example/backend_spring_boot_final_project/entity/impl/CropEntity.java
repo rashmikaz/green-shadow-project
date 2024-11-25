@@ -22,7 +22,7 @@ public class CropEntity implements SuperEntity {
     private String crop_image;
     private String category;
     private String season;
-//    @ManyToOne
-//    @JoinColumn(name = "field_code")
-//    private FieldEntity field;
+    @ManyToOne
+    @JoinColumn(name = "field_code")
+    private FieldEntity field;
 }

@@ -36,19 +36,7 @@ public class StaffController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO){
 
-//        try {
-//             staffService.saveStaff(staffDTO);
-//            logger.info("staff saved");
-//            return new ResponseEntity<>(HttpStatus.CREATED);
-//        }catch (DataPersistException e){
-//            e.printStackTrace();
-//            logger.warn("Returning Http 400 Bad Request",e.getMessage());
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            logger.error("Staff save failed",e.getMessage());
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
+
         try {
             staffService.saveStaff(staffDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);

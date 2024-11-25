@@ -16,9 +16,9 @@ public class BackendSpringBootFinalProjectApplication {
 		SpringApplication.run(BackendSpringBootFinalProjectApplication.class, args);
 	}
 
-//	@Bean
-//	public ModelMapper modelMapper() {
-//		return new ModelMapper();
-//	}
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 
 }

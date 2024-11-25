@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,6 +32,6 @@ public class StaffDTO implements StaffStatus {
     private String contactNo;
     private String email;
     private Role role;
-//    private List<FieldDTO> fields;
-//    private List<VehicleDTO> vehicles;
+    private List<FieldDTO> fields;
+    private List<VehicleDTO> vehicles;
 }

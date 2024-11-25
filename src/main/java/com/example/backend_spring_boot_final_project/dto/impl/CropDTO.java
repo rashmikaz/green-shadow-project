@@ -18,5 +18,5 @@ public class CropDTO implements CropStatus {
     private String category;
     private String season;
 
-//    private FieldDTO field;
+    private FieldDTO field;
 }

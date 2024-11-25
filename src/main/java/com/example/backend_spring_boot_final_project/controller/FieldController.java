@@ -4,9 +4,11 @@ import com.example.backend_spring_boot_final_project.dto.CropStatus;
 import com.example.backend_spring_boot_final_project.dto.FieldStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
+import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.FieldNotFoundException;
+import com.example.backend_spring_boot_final_project.service.CropService;
 import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
@@ -28,13 +30,17 @@ public class FieldController {
     @Autowired
     private FieldService fieldService;
 
+
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void>saveField(@RequestParam("field_name")String fieldName,
                                          @RequestParam("x") int x,
                                          @RequestParam("y") int y,
                                          @RequestParam("extent_size") Double extentSize,
-                                         @RequestParam("crop_image_1")MultipartFile image1,
-                                         @RequestParam("crop_image_2")MultipartFile image2){
+                                         @RequestPart("field_image_1")MultipartFile image1,
+                                         @RequestPart("field_image_2")MultipartFile image2,
+                                         @RequestPart (value = "crops[]",required = false) List<CropDTO> crops,
+                                         @RequestPart (value = "staff[]",required = false) List<StaffDTO> staff){
 
         Point location = new Point(x,y);
         String base64FieldImage1 ="";
@@ -42,6 +48,8 @@ public class FieldController {
 
 
         try {
+
+
             byte[] bytesFieldImage1 = image1.getBytes();
             base64FieldImage1 = AppUtil.fieldImageOneToBase64(bytesFieldImage1);
 
@@ -59,6 +67,9 @@ public class FieldController {
             buildFieldDTO.setExtent_size(extentSize);
             buildFieldDTO.setField_image1(base64FieldImage1);
             buildFieldDTO.setField_image1(base64FieldImage2);
+            buildFieldDTO.setCrops(crops);
+            buildFieldDTO.setAllocated_staff(staff);
+
 
 
             fieldService.saveField(buildFieldDTO);
