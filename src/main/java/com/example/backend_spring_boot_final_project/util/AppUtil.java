@@ -24,6 +24,8 @@ public class AppUtil {
 
     public static String generateEquipmentId(){return "EQUIPMENT-" + UUID.randomUUID();}
 
+    public static String generateUserId(){return "USER-" + UUID.randomUUID();}
+
     public static String fieldImageOneToBase64(byte [] fieldImage1){
         return Base64.getEncoder().encodeToString(fieldImage1);
     }
