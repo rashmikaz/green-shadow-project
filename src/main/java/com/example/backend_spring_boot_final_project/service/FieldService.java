@@ -15,4 +15,6 @@ public interface FieldService {
     void deleteField(String fieldId);
 
     FieldDTO getFieldByName(String field_name);
+
+    List<FieldDTO> getFieldListByName(List<String> field_name);
 }

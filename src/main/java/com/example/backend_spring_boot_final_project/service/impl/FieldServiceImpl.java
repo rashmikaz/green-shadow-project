@@ -15,8 +15,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -71,5 +73,21 @@ public class FieldServiceImpl implements FieldService {
             throw new FieldNotFoundException("Field not found: " + field_name);
         }
         return mapping.toFieldDTO(tmpField.get());
+    }
+    @Override
+    public List<FieldDTO> getFieldListByName(List<String> field_name) {
+        if(field_name == null || field_name.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        List<FieldEntity> fieldEntities = fieldDao.findByFieldNameList(field_name);
+
+        if(fieldEntities.isEmpty()){
+            throw new FieldNotFoundException("Field not found");
+        }
+
+        return fieldEntities.stream()
+                .map(mapping::toFieldDTO)
+                .collect(Collectors.toList());
     }
 }

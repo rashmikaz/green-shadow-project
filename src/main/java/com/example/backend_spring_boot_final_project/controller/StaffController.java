@@ -3,10 +3,12 @@ package com.example.backend_spring_boot_final_project.controller;
 import com.example.backend_spring_boot_final_project.dao.StaffDao;
 import com.example.backend_spring_boot_final_project.dto.CropStatus;
 import com.example.backend_spring_boot_final_project.dto.StaffStatus;
+import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.StaffNotFoundException;
+import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.service.StaffService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
@@ -20,10 +22,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/staff")
-//@CrossOrigin
+@CrossOrigin
 public class StaffController {
 
    @Autowired
@@ -31,6 +34,8 @@ public class StaffController {
 
 
     private static Logger logger = LoggerFactory.getLogger(StaffController.class);
+    @Autowired
+    private FieldService fieldService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,7 +43,15 @@ public class StaffController {
 
 
         try {
+//            staffService.saveStaff(staffDTO);
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+
+
+            List<String>field_name = staffDTO.getFields().stream().map(FieldDTO::getField_name).collect(Collectors.toList());
+            List<FieldDTO> fields = fieldService.getFieldListByName(field_name);
+            staffDTO.setFields(fields);
             staffService.saveStaff(staffDTO);
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (DataPersistException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
