@@ -15,5 +15,5 @@ public class VehicleDTO {
     private String fuelType;
     private Status status;
     private String remarks;
-//    private StaffDTO assigned_staff;
+    private StaffDTO assigned_staff;
 }

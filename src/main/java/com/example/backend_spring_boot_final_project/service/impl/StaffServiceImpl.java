@@ -2,9 +2,11 @@ package com.example.backend_spring_boot_final_project.service.impl;
 
 import com.example.backend_spring_boot_final_project.dao.StaffDao;
 import com.example.backend_spring_boot_final_project.dto.StaffStatus;
+import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
+import com.example.backend_spring_boot_final_project.exception.FieldNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.StaffNotFoundException;
 import com.example.backend_spring_boot_final_project.service.StaffService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
@@ -23,6 +25,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Autowired
     private StaffDao staffDao;
+
+
 
     @Autowired
     private Mapping mapping;
@@ -62,4 +66,12 @@ public class StaffServiceImpl implements StaffService {
     }
 
 
+    @Override
+    public StaffDTO getStaffByName(String staff_name) {
+        Optional<StaffEntity> tmpStaff = staffDao.findByStaffName(staff_name);
+        if(!tmpStaff.isPresent()){
+            throw new StaffNotFoundException("Staff not found: " + staff_name);
+        }
+        return mapping.toStaffDTO(tmpStaff.get());
+    }
 }
