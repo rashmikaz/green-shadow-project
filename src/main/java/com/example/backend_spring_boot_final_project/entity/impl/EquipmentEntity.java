@@ -21,10 +21,10 @@ public class EquipmentEntity implements SuperEntity {
     private EquipmentType type;
     @Enumerated(EnumType.STRING)
     private Status status;
-//    @ManyToOne
-//    @JoinColumn(name = "id")
-//    private StaffEntity assigned_staff;
-//    @ManyToOne
-//    @JoinColumn(name = "field_code")
-//    private FieldEntity assigned_field;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private StaffEntity assigned_staff;
+    @ManyToOne
+    @JoinColumn(name = "field_code")
+    private FieldEntity assigned_field;
 }

@@ -15,6 +15,6 @@ public class EquipmentDTO implements EquipmentStatus {
     private String name;
     private EquipmentType type;
     private Status status;
-//    private StaffDTO assigned_staff;
-//    private FieldDTO assigned_field;
+    private StaffDTO assigned_staff;
+    private FieldDTO assigned_field;
 }
