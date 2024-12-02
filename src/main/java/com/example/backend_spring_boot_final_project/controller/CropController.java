@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +31,6 @@ import java.util.Optional;
 public class CropController {
 
 
-
-
     @Autowired
     private CropService cropService;
 
@@ -39,21 +38,21 @@ public class CropController {
     private FieldService fieldService;
 
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void>saveCrop(@RequestParam("common_name") String commonName,
-                                        @RequestParam("scientific_name") String scientificName,
-                                        @RequestParam ("crop_image") MultipartFile cropImage,
-                                        @RequestParam ("category") String category,
-                                        @RequestParam("season") String season,
-                                        @RequestParam("field") String fieldDTO
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> saveCrop(@RequestParam("common_name") String commonName,
+                                         @RequestParam("scientific_name") String scientificName,
+                                         @RequestParam("crop_image") MultipartFile cropImage,
+                                         @RequestParam("category") String category,
+                                         @RequestParam("season") String season,
+                                         @RequestParam("field") String fieldDTO
 
 
-    ){
+    ) {
         String base64CropImage = "";
 
         try {
 
-           FieldDTO field = fieldService.getFieldByName(fieldDTO);
+            FieldDTO field = fieldService.getFieldByName(fieldDTO);
 
 
             byte[] bytesCropImage = cropImage.getBytes();
@@ -79,62 +78,86 @@ public class CropController {
         } catch (DataPersistException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
-    @GetMapping(value = "/{cropCode}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public CropStatus getSelectedCrop(@PathVariable("cropCode") String crop_code){
 
-        if (!Regex.cropCodeMatcher(crop_code)){
-            return new SelectedErrorStatus(1,"Crop code is invalid");
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CropDTO> getAllCrops() {
+        return cropService.getAllCrops();
+    }
+
+
+    @GetMapping(value = "/{cropCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CropStatus getSelectedCrop(@PathVariable("cropCode") String crop_code) {
+
+        if (!Regex.cropCodeMatcher(crop_code)) {
+            return new SelectedErrorStatus(1, "Crop code is invalid");
         }
 
         return cropService.getCrop(crop_code);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CropDTO>getAllCrops(){
-        return cropService.getAllCrops();
-    }
 
     @DeleteMapping(value = "/{cropCode}")
-    public ResponseEntity<Void>deleteCrop(@PathVariable("cropCode") String crop_code){
+    public ResponseEntity<Void> deleteCrop(@PathVariable("cropCode") String crop_code) {
         try {
-            if(!Regex.cropCodeMatcher(crop_code)){
+            if (!Regex.cropCodeMatcher(crop_code)) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             cropService.deleteCrop(crop_code);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (CropNotFoundException e){
+        } catch (CropNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
-    @PutMapping(value = "/{cropCode}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void>updateCrop(@PathVariable("cropCode") String cropCode ,@RequestBody CropDTO cropDTO){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping(value = "/{commonName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CropEntity> updateCrop(@PathVariable @RequestParam("common_name") String commonName,
+                                                 @RequestParam("scientific_name") String scientificName,
+                                                 @RequestPart("crop_image") MultipartFile cropImage,
+                                                 @RequestParam("category") String category,
+                                                 @RequestParam("season") String season,
+                                                 @RequestParam("field_name") String field_name
+
+    ) {
+        String base64CropImage = "";
+
         try {
-            if(!Regex.cropCodeMatcher(cropCode) || cropDTO ==null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            cropService.updateCrop(cropCode, cropDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (CropNotFoundException e){
+            FieldDTO field = fieldService.getFieldByName(field_name);
+            byte[] bytesCropImage = cropImage.getBytes();
+            base64CropImage = AppUtil.cropImageToBase64(bytesCropImage);
+
+            String crop_code = AppUtil.generateCropId();
+
+            CropDTO cropDTO = new CropDTO();
+            cropDTO.setCrop_code(crop_code);
+            cropDTO.setCommon_name(commonName);
+            cropDTO.setScientific_name(scientificName);
+            cropDTO.setCrop_image(base64CropImage);
+            cropDTO.setCategory(category);
+            cropDTO.setSeason(season);
+            cropDTO.setField(field);
+
+            cropService.updateCrop(commonName, cropDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (DataPersistException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
-
 }
