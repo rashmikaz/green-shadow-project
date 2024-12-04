@@ -5,6 +5,7 @@ import com.example.backend_spring_boot_final_project.dto.CropStatus;
 import com.example.backend_spring_boot_final_project.dto.StaffStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
+import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.StaffNotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -120,5 +122,18 @@ public class StaffController {
     }
 
 
+    @GetMapping( "/getstaffid/{firstName}")
+    public ResponseEntity<String> getStaffId(@PathVariable("firstName") String firstName){
+        try {
+            Optional<StaffEntity> staffEntity = staffService.findByFirstName(firstName);
+            return ResponseEntity.ok(staffEntity.get().getStaffId());
+        }catch (StaffNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
