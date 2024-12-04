@@ -113,4 +113,12 @@ public class StaffController {
         }
     }
 
+    @GetMapping(value = "getallstaffnames",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getAllStaffName(){
+        List<String> staffNames = staffService.getAllStaffNames();
+        return ResponseEntity.ok(staffNames);
+    }
+
+
+
 }
