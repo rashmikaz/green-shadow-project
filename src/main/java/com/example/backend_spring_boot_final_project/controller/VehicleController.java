@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.controller;
 
+import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.VehicleDTO;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
@@ -41,6 +42,8 @@ public class VehicleController {
         }
     }
 
-
-
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<VehicleDTO> getAllVehicles() {
+        return vehicleService.getAllVehicles();
+    }
 }

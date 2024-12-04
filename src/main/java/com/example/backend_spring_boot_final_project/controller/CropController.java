@@ -28,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/crop")
+@CrossOrigin(origins = "http://localhost:63342")
 public class CropController {
 
 
@@ -92,8 +93,8 @@ public class CropController {
     }
 
 
-    @GetMapping(value = "/{cropCode}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CropStatus getSelectedCrop(@PathVariable("cropCode") String crop_code) {
+    @GetMapping(value = "/{crop_Code}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CropStatus getSelectedCrop(@PathVariable("crop_Code") String crop_code) {
 
         if (!Regex.cropCodeMatcher(crop_code)) {
             return new SelectedErrorStatus(1, "Crop code is invalid");
