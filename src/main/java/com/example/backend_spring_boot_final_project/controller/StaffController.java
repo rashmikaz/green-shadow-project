@@ -32,8 +32,6 @@ public class StaffController {
    @Autowired
     private StaffService staffService;
 
-
-    private static Logger logger = LoggerFactory.getLogger(StaffController.class);
     @Autowired
     private FieldService fieldService;
 
@@ -41,12 +39,7 @@ public class StaffController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO){
 
-
         try {
-//            staffService.saveStaff(staffDTO);
-//            return new ResponseEntity<>(HttpStatus.CREATED);
-
-
             List<String>field_name = staffDTO.getFields().stream().map(FieldDTO::getField_name).collect(Collectors.toList());
             List<FieldDTO> fields = fieldService.getFieldListByName(field_name);
             staffDTO.setFields(fields);
@@ -59,8 +52,8 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-
     }
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<StaffDTO>getAllStaff(){
         return staffService.getAllStaff();
@@ -71,7 +64,6 @@ public class StaffController {
     public StaffStatus getSelectedStaff(@PathVariable("id") String staffId){
 
         if (!Regex.staffIdMatcher(staffId)){
-            logger.error("Staff id is not valid get staff");
             return new SelectedErrorStatus(1,"id not valid");
         }
 
@@ -85,7 +77,32 @@ public class StaffController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             staffService.deleteStaff(staffId);
-//            logger.info("staff deleted !");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (StaffNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping(value = "/{staffId}")
+    public ResponseEntity<Void> updateStaff(@PathVariable ("staffId") String staffId,
+                                            @RequestBody StaffDTO staffDTO){
+
+        try {
+            if(!Regex.staffIdMatcher(staffId) || staffDTO == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            List<String> field_name = staffDTO.getFields()
+                    .stream()
+                    .map(FieldDTO::getField_name)
+                    .collect(Collectors.toList());
+            List<FieldDTO> fields = fieldService.getFieldListByName(field_name);
+            staffDTO.setFields(fields);
+            staffService.updateStaff(staffId, staffDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (StaffNotFoundException e){
             e.printStackTrace();

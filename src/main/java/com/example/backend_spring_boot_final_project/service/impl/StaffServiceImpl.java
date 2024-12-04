@@ -2,11 +2,9 @@ package com.example.backend_spring_boot_final_project.service.impl;
 
 import com.example.backend_spring_boot_final_project.dao.StaffDao;
 import com.example.backend_spring_boot_final_project.dto.StaffStatus;
-import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
-import com.example.backend_spring_boot_final_project.exception.FieldNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.StaffNotFoundException;
 import com.example.backend_spring_boot_final_project.service.StaffService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
@@ -65,6 +63,29 @@ public class StaffServiceImpl implements StaffService {
         }
     }
 
+
+    @Override
+    public void updateStaff(String staffId, StaffDTO staffDTO) {
+        Optional<StaffEntity> tmpStaff = staffDao.findById(staffId);
+        if(!tmpStaff.isPresent()) {
+            throw new StaffNotFoundException("Staff Member Not Found");
+        }else{
+            tmpStaff.get().setFirstName(staffDTO.getFirstName());
+            tmpStaff.get().setLastName(staffDTO.getLastName());
+            tmpStaff.get().setDesignation(staffDTO.getDesignation());
+            tmpStaff.get().setGender(staffDTO.getGender());
+            tmpStaff.get().setJoinedDate(staffDTO.getJoinedDate());
+            tmpStaff.get().setDob(staffDTO.getDob());
+            tmpStaff.get().setAddressLine1(staffDTO.getAddressLine1());
+            tmpStaff.get().setAddressLine2(staffDTO.getAddressLine2());
+            tmpStaff.get().setAddressLine3(staffDTO.getAddressLine3());
+            tmpStaff.get().setAddressLine4(staffDTO.getAddressLine4());
+            tmpStaff.get().setAddressLine5(staffDTO.getAddressLine5());
+            tmpStaff.get().setContactNo(staffDTO.getContactNo());
+            tmpStaff.get().setEmail(staffDTO.getEmail());
+            tmpStaff.get().setRole(staffDTO.getRole());
+        }
+    }
 
     @Override
     public StaffDTO getStaffByName(String staff_name) {
