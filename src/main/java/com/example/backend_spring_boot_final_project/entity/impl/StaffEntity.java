@@ -1,6 +1,7 @@
 package com.example.backend_spring_boot_final_project.entity.impl;
 
 
+import com.example.backend_spring_boot_final_project.entity.Designation;
 import com.example.backend_spring_boot_final_project.entity.Gender;
 import com.example.backend_spring_boot_final_project.entity.Role;
 import com.example.backend_spring_boot_final_project.entity.SuperEntity;
@@ -22,7 +23,8 @@ public class StaffEntity implements SuperEntity {
     private String staffId;
     private String firstName;
     private String lastName;
-    private String designation;
+    @Enumerated(EnumType.STRING)
+    private Designation designation;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String joinedDate;

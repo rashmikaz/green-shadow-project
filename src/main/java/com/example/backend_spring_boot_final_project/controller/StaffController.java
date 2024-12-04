@@ -62,15 +62,15 @@ public class StaffController {
     }
 
 
-    @GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public StaffStatus getSelectedStaff(@PathVariable("id") String staffId){
-
-        if (!Regex.staffIdMatcher(staffId)){
-            return new SelectedErrorStatus(1,"id not valid");
-        }
-
-        return staffService.getstaff(staffId);
-    }
+//    @GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+//    public StaffStatus getSelectedStaff(@PathVariable("id") String staffId){
+//
+//        if (!Regex.staffIdMatcher(staffId)){
+//            return new SelectedErrorStatus(1,"id not valid");
+//        }
+//
+//        return staffService.getstaff(staffId);
+//    }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void>deleteStaff(@PathVariable("id") String staffId){

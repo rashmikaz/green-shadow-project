@@ -3,6 +3,7 @@ package com.example.backend_spring_boot_final_project.dto.impl;
 
 
 import com.example.backend_spring_boot_final_project.dto.StaffStatus;
+import com.example.backend_spring_boot_final_project.entity.Designation;
 import com.example.backend_spring_boot_final_project.entity.Gender;
 import com.example.backend_spring_boot_final_project.entity.Role;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class StaffDTO implements StaffStatus {
     private String staffId;
     private String firstName;
     private String lastName;
-    private String designation;
+    private Designation designation;
     private Gender gender;
     private String joinedDate;
     private String dob;
@@ -32,5 +33,5 @@ public class StaffDTO implements StaffStatus {
     private String email;
     private Role role;
     private List<FieldDTO> fields;
-//    private List<VehicleDTO> vehicles;
+    private List<VehicleDTO> vehicles;
 }
