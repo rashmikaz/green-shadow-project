@@ -3,8 +3,12 @@ package com.example.backend_spring_boot_final_project.service.impl;
 import com.example.backend_spring_boot_final_project.dao.MonitoringLogDao;
 import com.example.backend_spring_boot_final_project.dto.MonitoringLogStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.MonitoringLogDTO;
+import com.example.backend_spring_boot_final_project.entity.impl.CropEntity;
+import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
 import com.example.backend_spring_boot_final_project.entity.impl.MonitoringLogEntity;
+import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
+import com.example.backend_spring_boot_final_project.exception.LogNotFoundException;
 import com.example.backend_spring_boot_final_project.service.LogService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,6 +63,39 @@ public class LogServiceImpl implements LogService {
                     return monitoringLogDTO;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteLog(String logCode) {
+        Optional<MonitoringLogEntity> foundLog = monitoringLogDao.findById(logCode);
+        if(!foundLog.isPresent()){
+            throw new LogNotFoundException("Log not found");
+        }else{
+            monitoringLogDao.deleteById(logCode);
+        }
+    }
+
+    @Override
+    public void updateLog(String logCode, MonitoringLogDTO monitoringLogDTO) {
+        Optional<MonitoringLogEntity> tmpLog = monitoringLogDao.findById(logCode);
+        if(!tmpLog.isPresent()){
+            throw new LogNotFoundException("Log not found");
+        }else{
+            tmpLog.get().setLog_date(monitoringLogDTO.getLog_date());
+            tmpLog.get().setLog_details(monitoringLogDTO.getLog_details());
+            tmpLog.get().setObserved_image(monitoringLogDTO.getObserved_image());
+            List<FieldEntity> fieldEntityList = mapping.toFieldEntityList(monitoringLogDTO.getFields());
+            tmpLog.get().setFields(fieldEntityList);
+            List<CropEntity> cropEntityList = mapping.toCropEntityList(monitoringLogDTO.getCrops());
+            tmpLog.get().setCrops(cropEntityList);
+            List<StaffEntity> staffEntityList = mapping.toStaffEntityList(monitoringLogDTO.getStaff());
+            tmpLog.get().setStaff(staffEntityList);
+        }
+    }
+
+    @Override
+    public Optional<MonitoringLogEntity> findByLogDesc(String logDesc) {
+        return monitoringLogDao.findByLogDesc(logDesc);
     }
 
 }

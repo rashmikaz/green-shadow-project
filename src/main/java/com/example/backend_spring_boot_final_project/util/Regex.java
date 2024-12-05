@@ -38,4 +38,10 @@ public class Regex {
         return regexPattern.matcher(licenseNumber).matches();
     }
 
+    public static boolean logCodeMatcher(String logCode) {
+        String regexForLogCode = "^LOG-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForLogCode);
+        return regexPattern.matcher(logCode).matches();
+    }
+
 }

@@ -28,6 +28,9 @@ public class Mapping {
     public List<CropDTO> toCropDTOList(List<CropEntity> cropEntitiesList) {
         return modelMapper.map(cropEntitiesList,new TypeToken<List<CropDTO>>() {}.getType());
     }
+    public List<CropEntity> toCropEntityList(List<CropDTO> cropDTOList) {
+        return modelMapper.map(cropDTOList,new TypeToken<List<CropEntity>>() {}.getType());
+    }
 
 
     //for staff mapping
