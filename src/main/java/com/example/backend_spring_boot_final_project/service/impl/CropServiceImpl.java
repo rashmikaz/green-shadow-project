@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.service.impl;
 
+
 import com.example.backend_spring_boot_final_project.dao.CropDao;
 import com.example.backend_spring_boot_final_project.dao.FieldDao;
 import com.example.backend_spring_boot_final_project.dto.CropStatus;
@@ -47,18 +48,7 @@ public class CropServiceImpl implements CropService {
     }
 
     @Override
-    public CropStatus getCrop(String cropCode){
-        if(cropDao.existsById(cropCode)) {
-            var selectedCrop = cropDao.getReferenceById(cropCode);
-            return mapping.toCropDTO(selectedCrop);
-        }else {
-            return new SelectedErrorStatus(2,"Selected crop does not exist");
-        }
-    }
-
-
-    @Override
-    public List<CropDTO>getAllCrops(){
+    public List<CropDTO> getAllCrops() {
         List<CropEntity> crops = cropDao.findAll();
         return crops.stream()
                 .map(crop -> {
@@ -68,14 +58,25 @@ public class CropServiceImpl implements CropService {
                     cropDTO.setScientific_name(crop.getScientific_name());
                     cropDTO.setCategory(crop.getCategory());
                     cropDTO.setSeason(crop.getSeason());
-                    Optional<FieldEntity> assignedField = fieldDao.
-                            findById(crop.getField().getField_code());
+                    Optional<FieldEntity> assignedField = fieldDao.findById(crop.getField().getField_code());
                     FieldDTO assignedFieldDTO = assignedField.isPresent() ?
                             mapping.toFieldDTO(assignedField.get()) : null;
                     cropDTO.setField(assignedFieldDTO);
                     return cropDTO;
                 })
                 .collect(Collectors.toList());
+
+    }
+
+
+    @Override
+    public CropStatus getCrop(String cropCode){
+        if(cropDao.existsById(cropCode)) {
+            var selectedCrop = cropDao.getReferenceById(cropCode);
+            return mapping.toCropDTO(selectedCrop);
+        }else {
+            return new SelectedErrorStatus(2,"Selected crop does not exist");
+        }
     }
 
     @Override
@@ -87,6 +88,8 @@ public class CropServiceImpl implements CropService {
             cropDao.deleteById(cropCode);
         }
     }
+
+
 
    @Override
     public void updateCrop(String commonName, CropDTO cropDTO){
@@ -104,6 +107,14 @@ public class CropServiceImpl implements CropService {
         }
     }
 
+
+    @Override
+    public List<String> getAllCropNames() {
+        List<CropEntity> cropEntities = cropDao.findAll();
+        return cropEntities.stream()
+                .map(CropEntity::getCommon_name)
+                .collect(Collectors.toList());
+    }
 
 
 

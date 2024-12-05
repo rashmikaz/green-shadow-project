@@ -11,9 +11,6 @@ import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
 import com.example.backend_spring_boot_final_project.util.Regex;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,9 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+
 import java.util.List;
-import java.util.Optional;
+
 
 
 @RestController
@@ -160,5 +157,11 @@ public class CropController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @GetMapping(value = "getallcropnames",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getAllCropName(){
+        List<String> cropNames = cropService.getAllCropNames();
+        return ResponseEntity.ok(cropNames);
     }
 }
