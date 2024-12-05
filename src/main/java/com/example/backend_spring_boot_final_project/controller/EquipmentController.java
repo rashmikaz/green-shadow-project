@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.controller;
 
+import com.example.backend_spring_boot_final_project.dto.EquipmentStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.EquipmentDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
@@ -8,14 +9,13 @@ import com.example.backend_spring_boot_final_project.exception.DataPersistExcept
 import com.example.backend_spring_boot_final_project.service.EquipmentService;
 import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.service.StaffService;
+import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
+import com.example.backend_spring_boot_final_project.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/equipment")
@@ -48,5 +48,12 @@ public class EquipmentController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping(value = "/{equipmentId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public EquipmentStatus getSelectedEquipment(@PathVariable ("equipmentId") String equipmentId) {
+        if (!Regex.equipIdMatcher(equipmentId)) {
+            return new SelectedErrorStatus(1, "Equipment id does not match");
+        }
+        return equipmentService.getEquipment(equipmentId);
     }
 }

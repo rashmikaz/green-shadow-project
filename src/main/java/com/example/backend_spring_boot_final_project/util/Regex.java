@@ -19,4 +19,10 @@ public class Regex {
         Pattern regexPattern = Pattern.compile(regexForFieldCode);
         return regexPattern.matcher(fieldCode).matches();
     }
+
+    public static boolean equipIdMatcher(String equipId) {
+        String regexForEquipId = "^EQUIP-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForEquipId);
+        return regexPattern.matcher(equipId).matches();
+    }
 }

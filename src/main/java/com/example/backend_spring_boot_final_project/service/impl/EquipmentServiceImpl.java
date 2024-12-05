@@ -1,10 +1,12 @@
 package com.example.backend_spring_boot_final_project.service.impl;
 
 import com.example.backend_spring_boot_final_project.dao.EquipmentDao;
+import com.example.backend_spring_boot_final_project.dto.EquipmentStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.EquipmentDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.EquipmentEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.EquipmentService;
+import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
 import com.example.backend_spring_boot_final_project.util.Mapping;
 import jakarta.transaction.Transactional;
@@ -30,7 +32,15 @@ public class EquipmentServiceImpl implements EquipmentService {
         if(saveEquipment == null) {
             throw new DataPersistException("Equipment not saved");
         }
+    }
 
-
+    @Override
+    public EquipmentStatus getEquipment(String equipmentId) {
+        if(equipmentDao.existsById(equipmentId)) {
+            var selectedEquipment = equipmentDao.getReferenceById(equipmentId);
+            return mapping.toEquipmentDTO(selectedEquipment);
+        }else{
+            return new SelectedErrorStatus(2,"Selected Equipment not found");
+        }
     }
 }
