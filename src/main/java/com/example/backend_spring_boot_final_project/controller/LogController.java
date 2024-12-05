@@ -35,6 +35,7 @@ public class LogController {
     @Autowired
     private StaffService staffService;
 
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveLog(@RequestParam("logDate") String logDate,
                                         @RequestParam ("logDetails") String logDetails,
@@ -78,5 +79,10 @@ public class LogController {
             return new SelectedErrorStatus(1,"Log code not match");
         }
         return logService.getLog(logCode);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<MonitoringLogDTO> getAllLogs(){
+        return logService.getAllLogs();
     }
 }

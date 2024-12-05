@@ -13,6 +13,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class LogServiceImpl implements LogService {
@@ -42,5 +45,19 @@ public class LogServiceImpl implements LogService {
         }
     }
 
+
+    @Override
+    public List<MonitoringLogDTO> getAllLogs() {
+        List<MonitoringLogEntity> logs = monitoringLogDao.findAll();
+        return logs.stream()
+                .map(log -> {
+                    MonitoringLogDTO monitoringLogDTO = new MonitoringLogDTO();
+                    monitoringLogDTO.setLog_date(log.getLog_date());
+                    monitoringLogDTO.setLog_details(log.getLog_details());
+                    monitoringLogDTO.setObserved_image(log.getObserved_image());
+                    return monitoringLogDTO;
+                })
+                .collect(Collectors.toList());
+    }
 
 }
