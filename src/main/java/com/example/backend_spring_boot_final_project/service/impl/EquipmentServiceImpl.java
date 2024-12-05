@@ -6,6 +6,8 @@ import com.example.backend_spring_boot_final_project.dto.impl.EquipmentDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.EquipmentEntity;
+import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
+import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.EquipmentNotFoundException;
 import com.example.backend_spring_boot_final_project.service.EquipmentService;
@@ -88,6 +90,21 @@ public class EquipmentServiceImpl implements EquipmentService {
             throw new EquipmentNotFoundException("Equipment not found");
         }else{
             equipmentDao.deleteById(equipmentId);
+        }
+    }
+    @Override
+    public void updateEquipment(String equipmentId, EquipmentDTO equipmentDTO) {
+        Optional<EquipmentEntity> tmpEquipment = equipmentDao.findById(equipmentId);
+        if(!tmpEquipment.isPresent()) {
+            throw new EquipmentNotFoundException("Equipment not found");
+        }else{
+            tmpEquipment.get().setName(equipmentDTO.getName());
+            tmpEquipment.get().setType(equipmentDTO.getType());
+            tmpEquipment.get().setStatus(equipmentDTO.getStatus());
+            StaffEntity staffEntity = mapping.toStaffEntity(equipmentDTO.getAssigned_staff());
+            tmpEquipment.get().setAssigned_staff(staffEntity);
+            FieldEntity fieldEntity = mapping.toFieldEntity(equipmentDTO.getAssigned_field());
+            tmpEquipment.get().setAssigned_field(fieldEntity);
         }
     }
 

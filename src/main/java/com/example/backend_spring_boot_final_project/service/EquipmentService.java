@@ -13,4 +13,6 @@ public interface EquipmentService {
     List<EquipmentDTO> getAllEquipment();
 
     void deleteEquipment(String equipmentId);
+
+    void updateEquipment(String equipmentId, EquipmentDTO equipmentDTO);
 }

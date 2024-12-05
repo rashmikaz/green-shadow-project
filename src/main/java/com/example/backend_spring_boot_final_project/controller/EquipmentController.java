@@ -81,4 +81,27 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @ResponseStatus(HttpStatus.CREATED)
+    @PatchMapping(value = "/{equipmentId}")
+    public ResponseEntity<Void> updateEquipment(@PathVariable ("equipmentId") String equipmentId,
+                                                @RequestBody EquipmentDTO equipmentDTO) {
+
+        try {
+            if(!Regex.equipIdMatcher(equipmentId) || equipmentDTO == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirstName());
+            FieldDTO field = fieldService.getFieldByName(equipmentDTO.getAssigned_field().getField_name());
+            equipmentDTO.setAssigned_staff(staff);
+            equipmentDTO.setAssigned_field(field);
+            equipmentService.updateEquipment(equipmentId, equipmentDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (EquipmentNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
