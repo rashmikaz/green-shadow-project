@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/equipment")
 public class EquipmentController {
@@ -55,5 +57,10 @@ public class EquipmentController {
             return new SelectedErrorStatus(1, "Equipment id does not match");
         }
         return equipmentService.getEquipment(equipmentId);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<EquipmentDTO> getAllEquipments() {
+        return equipmentService.getAllEquipment();
     }
 }

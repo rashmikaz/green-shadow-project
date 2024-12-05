@@ -3,6 +3,8 @@ package com.example.backend_spring_boot_final_project.service.impl;
 import com.example.backend_spring_boot_final_project.dao.EquipmentDao;
 import com.example.backend_spring_boot_final_project.dto.EquipmentStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.EquipmentDTO;
+import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
+import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.EquipmentEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.service.EquipmentService;
@@ -12,6 +14,10 @@ import com.example.backend_spring_boot_final_project.util.Mapping;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,4 +49,35 @@ public class EquipmentServiceImpl implements EquipmentService {
             return new SelectedErrorStatus(2,"Selected Equipment not found");
         }
     }
+
+    @Override
+    public List<EquipmentDTO> getAllEquipment() {
+        List<EquipmentEntity> equipments = equipmentDao.findAll();
+        return equipments.stream()
+                .map(equipment -> {
+                    EquipmentDTO equipmentDTO = new EquipmentDTO();
+                    equipmentDTO.setName(equipment.getName());
+                    equipmentDTO.setType(equipment.getType());
+                    equipmentDTO.setStatus(equipment.getStatus());
+                    StaffDTO staffDTO = Optional.ofNullable(equipment.getAssigned_staff())
+                            .map(staff -> {
+                                StaffDTO minimalStaffDto = new StaffDTO();
+                                minimalStaffDto.setFirstName(staff.getFirstName());
+                                return minimalStaffDto;
+                            })
+                            .orElse(null);
+                    FieldDTO fieldDTO = Optional.ofNullable(equipment.getAssigned_field())
+                            .map(field -> {
+                                FieldDTO minimalFieldDTO = new FieldDTO();
+                                minimalFieldDTO.setField_name(field.getField_name());
+                                return minimalFieldDTO;
+                            })
+                            .orElse(null);
+                    equipmentDTO.setAssigned_staff(staffDTO);
+                    equipmentDTO.setAssigned_field(fieldDTO);
+                    return equipmentDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
 }
