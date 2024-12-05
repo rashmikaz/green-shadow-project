@@ -25,4 +25,17 @@ public class Regex {
         Pattern regexPattern = Pattern.compile(regexForEquipId);
         return regexPattern.matcher(equipId).matches();
     }
+
+    public static boolean vehicleCodeMatcher(String vehicleCode) {
+        String regexForVehicleCode = "^VEHICLE-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForVehicleCode);
+        return regexPattern.matcher(vehicleCode).matches();
+    }
+
+    public static boolean vehicleLicenseMatcher(String licenseNumber) {
+        String regexForVehicleNumber = "^[xXyYzZ]-?\\d{4}$";
+        Pattern regexPattern = Pattern.compile(regexForVehicleNumber);
+        return regexPattern.matcher(licenseNumber).matches();
+    }
+
 }
