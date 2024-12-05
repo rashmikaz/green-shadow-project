@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.controller;
 
+import com.example.backend_spring_boot_final_project.dto.MonitoringLogStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.MonitoringLogDTO;
@@ -9,7 +10,9 @@ import com.example.backend_spring_boot_final_project.service.CropService;
 import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.service.LogService;
 import com.example.backend_spring_boot_final_project.service.StaffService;
+import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
+import com.example.backend_spring_boot_final_project.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,5 +70,13 @@ public class LogController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/{logCode}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public MonitoringLogStatus getSelectedLog(@PathVariable ("logCode") String logCode){
+        if(!Regex.logCodeMatcher(logCode)){
+            return new SelectedErrorStatus(1,"Log code not match");
+        }
+        return logService.getLog(logCode);
     }
 }
