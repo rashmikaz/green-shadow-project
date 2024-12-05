@@ -1,8 +1,11 @@
 package com.example.backend_spring_boot_final_project.service.impl;
 
+import com.example.backend_spring_boot_final_project.dao.FieldDao;
 import com.example.backend_spring_boot_final_project.dao.StaffDao;
 import com.example.backend_spring_boot_final_project.dto.StaffStatus;
+import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
+import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
 import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.StaffNotFoundException;
@@ -14,6 +17,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +30,9 @@ public class StaffServiceImpl implements StaffService {
     @Autowired
     private StaffDao staffDao;
 
+    @Autowired
+    private FieldDao fieldDao;
+
 
 
     @Autowired
@@ -32,7 +40,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public void saveStaff(StaffDTO staffDTO){
-        staffDTO.setStaffId(AppUtil.generateStaffId());
+        staffDTO.setId(AppUtil.generateStaffId());
        StaffEntity staffEntity = staffDao.save(mapping.toStaffEntity(staffDTO));
        if (staffEntity==null){
            throw new DataPersistException("Staff not saved");
@@ -41,7 +49,31 @@ public class StaffServiceImpl implements StaffService {
     }
     @Override
     public List<StaffDTO> getAllStaff(){
-        return mapping.toStaffDTOList(staffDao.findAll());
+        List<StaffEntity> staffs = staffDao.findAll();
+        return staffs.stream()
+                .map(staff -> {
+                    StaffDTO staffDTO = new StaffDTO();
+                    staffDTO.setFirst_name(staff.getFirst_name());
+                    staffDTO.setLast_name(staff.getLast_name());
+                    staffDTO.setDesignation(staff.getDesignation());
+                    staffDTO.setGender(staff.getGender());
+                    staffDTO.setJoined_date(staff.getJoined_date());
+                    staffDTO.setDob(staff.getDob());
+                    staffDTO.setAddress(staff.getAddress());
+                    staffDTO.setContact_no(staff.getContact_no());
+                    staffDTO.setEmail(staff.getEmail());
+                    staffDTO.setRole(staff.getRole());
+                    List<FieldDTO> assignedFieldDTO = new ArrayList<>();
+                    for (FieldEntity field : staff.getFields()) {
+                        Optional<FieldEntity> fieldOpt = fieldDao.findById(field.getField_name());
+                        if (fieldOpt.isPresent()) {
+                            assignedFieldDTO.add(mapping.toFieldDTO(fieldOpt.get()));
+                        }
+                    }
+                    staffDTO.setFields(assignedFieldDTO);
+                    return staffDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,18 +103,14 @@ public class StaffServiceImpl implements StaffService {
         if(!tmpStaff.isPresent()) {
             throw new StaffNotFoundException("Staff Member Not Found");
         }else{
-            tmpStaff.get().setFirstName(staffDTO.getFirstName());
-            tmpStaff.get().setLastName(staffDTO.getLastName());
+            tmpStaff.get().setFirst_name(staffDTO.getFirst_name());
+            tmpStaff.get().setLast_name(staffDTO.getLast_name());
             tmpStaff.get().setDesignation(staffDTO.getDesignation());
             tmpStaff.get().setGender(staffDTO.getGender());
-            tmpStaff.get().setJoinedDate(staffDTO.getJoinedDate());
+            tmpStaff.get().setJoined_date(staffDTO.getJoined_date());
             tmpStaff.get().setDob(staffDTO.getDob());
-            tmpStaff.get().setAddressLine1(staffDTO.getAddressLine1());
-            tmpStaff.get().setAddressLine2(staffDTO.getAddressLine2());
-            tmpStaff.get().setAddressLine3(staffDTO.getAddressLine3());
-            tmpStaff.get().setAddressLine4(staffDTO.getAddressLine4());
-            tmpStaff.get().setAddressLine5(staffDTO.getAddressLine5());
-            tmpStaff.get().setContactNo(staffDTO.getContactNo());
+            tmpStaff.get().setAddress(staffDTO.getAddress());
+            tmpStaff.get().setContact_no(staffDTO.getContact_no());
             tmpStaff.get().setEmail(staffDTO.getEmail());
             tmpStaff.get().setRole(staffDTO.getRole());
         }
@@ -101,12 +129,28 @@ public class StaffServiceImpl implements StaffService {
     public List<String> getAllStaffNames() {
         List<StaffEntity> staffEntities = staffDao.findAll();
         return staffEntities.stream()
-                .map(StaffEntity::getFirstName)
+                .map(StaffEntity::getFirst_name)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<StaffEntity> findByFirstName(String firstName) {
         return staffDao.findByStaffName(firstName);
+    }
+    @Override
+    public List<StaffDTO> getStaffListByName(List<String> staffs) {
+        if(staffs.isEmpty() || staffs == null){
+            return Collections.emptyList();
+        }
+
+        List<StaffEntity> staffEntities = staffDao.findByStaffNameList(staffs);
+
+        if(staffEntities.isEmpty()){
+            throw new StaffNotFoundException("Staff Member Not Found");
+        }
+
+        return staffEntities.stream()
+                .map(mapping::toStaffDTO)
+                .collect(Collectors.toList());
     }
 }

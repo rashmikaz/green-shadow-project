@@ -24,4 +24,6 @@ public interface StaffService {
     List<String> getAllStaffNames();
 
     Optional<StaffEntity> findByFirstName(String firstName);
+
+    List<StaffDTO> getStaffListByName(List<String> staffs);
 }
