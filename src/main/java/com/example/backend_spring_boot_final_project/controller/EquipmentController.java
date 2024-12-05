@@ -6,6 +6,7 @@ import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.VehicleDTO;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
+import com.example.backend_spring_boot_final_project.exception.EquipmentNotFoundException;
 import com.example.backend_spring_boot_final_project.service.EquipmentService;
 import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.service.StaffService;
@@ -62,5 +63,22 @@ public class EquipmentController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EquipmentDTO> getAllEquipments() {
         return equipmentService.getAllEquipment();
+    }
+
+    @DeleteMapping(value = "/{equipmentId}")
+    public ResponseEntity<Void> deleteEquipment(@PathVariable("equipmentId") String equipmentId) {
+        try {
+            if(!Regex.equipIdMatcher(equipmentId)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            equipmentService.deleteEquipment(equipmentId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (EquipmentNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
