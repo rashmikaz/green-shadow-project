@@ -16,4 +16,6 @@ public interface VehicleService {
 
 
     Optional<VehicleEntity> findByLicenseNumber(String licenseNumber);
+
+    void updateVehicle(String vehicleCode, VehicleDTO vehicleDTO);
 }

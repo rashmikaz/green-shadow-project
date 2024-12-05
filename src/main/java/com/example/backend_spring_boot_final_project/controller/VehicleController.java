@@ -83,4 +83,26 @@ public class VehicleController {
         }
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
+    @PatchMapping(value = "/{vehicleCode}")
+    public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleCode") String vehicleCode,
+                                              @RequestBody VehicleDTO vehicleDTO) {
+
+        try {
+            if(!Regex.vehicleCodeMatcher(vehicleCode) || vehicleDTO == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirstName());
+            vehicleDTO.setAssigned_staff(staff);
+            vehicleService.updateVehicle(vehicleCode, vehicleDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (VehicleNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
