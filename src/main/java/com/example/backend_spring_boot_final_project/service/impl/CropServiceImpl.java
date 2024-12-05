@@ -124,4 +124,18 @@ public class CropServiceImpl implements CropService {
     }
 
 
+    @Override
+    public List<CropDTO> getCropListByName(List<String> crops) {
+        if(crops.isEmpty() || crops == null) {
+            return Collections.emptyList();
+        }
+        List<CropEntity> cropEntities = cropDao.findByCropNameList(crops);
+
+        if(cropEntities.isEmpty()) {
+            throw new CropNotFoundException("Crop not found");
+        }
+        return cropEntities.stream()
+                .map(mapping::toCropDTO)
+                .collect(Collectors.toList());
+    }
 }
