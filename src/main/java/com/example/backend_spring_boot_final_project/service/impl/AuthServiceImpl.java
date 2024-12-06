@@ -1,10 +1,18 @@
 package com.example.backend_spring_boot_final_project.service.impl;
 
 import com.example.backend_spring_boot_final_project.dao.UserDao;
+import com.example.backend_spring_boot_final_project.dto.impl.UserDTO;
+import com.example.backend_spring_boot_final_project.entity.impl.UserEntity;
+import com.example.backend_spring_boot_final_project.secure.JWTAuthResponse;
+import com.example.backend_spring_boot_final_project.secure.SignIn;
 import com.example.backend_spring_boot_final_project.service.AuthService;
 import com.example.backend_spring_boot_final_project.service.JWTService;
+import com.example.backend_spring_boot_final_project.util.AppUtil;
 import com.example.backend_spring_boot_final_project.util.Mapping;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service

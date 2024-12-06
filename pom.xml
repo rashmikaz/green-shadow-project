@@ -93,12 +93,12 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-<!--		&lt;!&ndash; Spring Boot Starter Security &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--			<version>3.3.4</version>-->
-<!--		</dependency>-->
+		<!-- Spring Boot Starter Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>3.3.4</version>
+		</dependency>
 
 		<!-- JSON Web Token (jjwt-api) -->
 		<dependency>
