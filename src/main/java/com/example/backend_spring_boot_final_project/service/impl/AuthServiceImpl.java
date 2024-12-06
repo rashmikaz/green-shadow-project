@@ -24,4 +24,14 @@ public class AuthServiceImpl implements AuthService {
         System.out.println(generatedToken);
         return JWTAuthResponse.builder().token(generatedToken).build();
     }
+    @Override
+    public JWTAuthResponse signUp(UserDTO userDTO) {
+        userDTO.setUserId(AppUtil.generateUserId());
+        UserEntity savedUser = userDao.save(mapping.toUserEntity(userDTO));
+        //Generate the token and return it
+        var generatedToken = jwtService.generateToken(savedUser);
+        System.out.println(generatedToken);
+        return JWTAuthResponse.builder().token(generatedToken).build();
+    }
+
 }
