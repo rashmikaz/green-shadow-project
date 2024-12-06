@@ -33,5 +33,15 @@ public class AuthServiceImpl implements AuthService {
         System.out.println(generatedToken);
         return JWTAuthResponse.builder().token(generatedToken).build();
     }
+    @Override
+    public JWTAuthResponse refreshToken(String accessToken) {
+        //extract username
+        var userName = jwtService.extractUserName(accessToken);
+        //check the user availability in the DB
+        var findUser = userDao.findByEmail(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var refreshToken = jwtService.refreshToken(findUser);
+        return JWTAuthResponse.builder().token(refreshToken).build();
+    }
 
 }
