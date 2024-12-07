@@ -26,12 +26,19 @@ public class AppUtil {
 
     public static String generateUserId(){return "USER-" + UUID.randomUUID();}
 
+    public static String generateLogId(){
+        return "LOG-" + UUID.randomUUID();
+    }
+
     public static String fieldImageOneToBase64(byte [] fieldImage1){
         return Base64.getEncoder().encodeToString(fieldImage1);
     }
 
     public static String fieldImageTwoToBase64(byte [] fieldImage2){
         return Base64.getEncoder().encodeToString(fieldImage2);
+    }
+    public static String observedImageOneToBase64(byte [] observedImage){
+        return Base64.getEncoder().encodeToString(observedImage);
     }
 
 

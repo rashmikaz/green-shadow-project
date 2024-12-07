@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/vehicle")
+@CrossOrigin
 public class VehicleController {
 
     @Autowired
@@ -33,7 +34,7 @@ public class VehicleController {
     public ResponseEntity<Void>saveVehicle(@RequestBody VehicleDTO vehicleDTO) {
 
         try {
-            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirstName());
+            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirst_name());
             vehicleDTO.setAssigned_staff(staff);
             vehicleService.vehicleSave(vehicleDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -92,7 +93,7 @@ public class VehicleController {
             if(!Regex.vehicleCodeMatcher(vehicleCode) || vehicleDTO == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirstName());
+            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirst_name());
             vehicleDTO.setAssigned_staff(staff);
             vehicleService.updateVehicle(vehicleCode, vehicleDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

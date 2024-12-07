@@ -22,7 +22,7 @@ public class SecurityConfig {
     private final UserService userService;
     private final JWTConfigFilter jwtConfigFilter;
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{//filter and authori
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("api/v1/auth/**")
@@ -40,7 +40,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {//identify user
         DaoAuthenticationProvider dap =
                 new DaoAuthenticationProvider();
         dap.setUserDetailsService(userService.userDetailsService());

@@ -62,7 +62,7 @@ public class VehicleServiceImpl implements VehicleService {
                     StaffDTO staffDTO = Optional.ofNullable(vehicle.getAssigned_staff())
                             .map(staff -> {
                                 StaffDTO minimalStaffDto = new StaffDTO();
-                                minimalStaffDto.setFirstName(staff.getFirstName());
+                                minimalStaffDto.setFirst_name(staff.getFirst_name());
                                 return minimalStaffDto;
                             })
                             .orElse(null);

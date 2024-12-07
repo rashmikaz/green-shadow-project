@@ -24,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/equipment")
+@CrossOrigin
 public class EquipmentController {
 
     @Autowired
@@ -39,7 +40,7 @@ public class EquipmentController {
     public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO){
 
         try {
-          StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirstName());
+          StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirst_name());
           FieldDTO fieldDTO = fieldService.getFieldByName(equipmentDTO.getAssigned_field().getField_name());
 
           equipmentDTO.setAssigned_staff(staff);
@@ -92,7 +93,7 @@ public class EquipmentController {
             if(!Regex.equipIdMatcher(equipmentId) || equipmentDTO == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirstName());
+            StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirst_name());
             FieldDTO field = fieldService.getFieldByName(equipmentDTO.getAssigned_field().getField_name());
             equipmentDTO.setAssigned_staff(staff);
             equipmentDTO.setAssigned_field(field);

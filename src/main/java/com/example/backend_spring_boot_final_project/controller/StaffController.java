@@ -126,7 +126,7 @@ public class StaffController {
     public ResponseEntity<String> getStaffId(@PathVariable("firstName") String firstName){
         try {
             Optional<StaffEntity> staffEntity = staffService.findByFirstName(firstName);
-            return ResponseEntity.ok(staffEntity.get().getStaffId());
+            return ResponseEntity.ok(staffEntity.get().getId());
         }catch (StaffNotFoundException e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

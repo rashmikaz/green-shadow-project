@@ -2,10 +2,12 @@ package com.example.backend_spring_boot_final_project.entity.impl;
 
 
 import com.example.backend_spring_boot_final_project.entity.SuperEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor

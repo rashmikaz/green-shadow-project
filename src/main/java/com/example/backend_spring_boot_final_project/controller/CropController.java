@@ -20,12 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
-
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping("api/v1/crop")
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin
 public class CropController {
 
 
@@ -163,5 +163,19 @@ public class CropController {
     public ResponseEntity<List<String>> getAllCropName(){
         List<String> cropNames = cropService.getAllCropNames();
         return ResponseEntity.ok(cropNames);
+    }
+
+    @GetMapping("/getcropcode/{commonName}")
+    public ResponseEntity<String> getCropCode(@PathVariable("commonName") String commonName){
+        try {
+            Optional<CropEntity> cropEntity = cropService.findByCommonName(commonName);
+            return ResponseEntity.ok(cropEntity.get().getCrop_code());
+        }catch (CropNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -65,7 +65,7 @@ public class EquipmentServiceImpl implements EquipmentService {
                     StaffDTO staffDTO = Optional.ofNullable(equipment.getAssigned_staff())
                             .map(staff -> {
                                 StaffDTO minimalStaffDto = new StaffDTO();
-                                minimalStaffDto.setFirstName(staff.getFirstName());
+                                minimalStaffDto.setFirst_name(staff.getFirst_name());
                                 return minimalStaffDto;
                             })
                             .orElse(null);

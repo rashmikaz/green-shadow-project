@@ -22,6 +22,7 @@ import java.io.IOException;
 public class JWTConfigFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserService userService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String initToken = request.getHeader("Authorization");

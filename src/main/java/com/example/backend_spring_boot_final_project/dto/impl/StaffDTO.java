@@ -17,21 +17,16 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class StaffDTO implements StaffStatus {
-    private String staffId;
-    private String firstName;
-    private String lastName;
+    private String id;
+    private String first_name;
+    private String last_name;
     private Designation designation;
     private Gender gender;
-    private String joinedDate;
+    private String joined_date;
     private String dob;
-    private String addressLine1;
-    private String addressLine2;
-    private String addressLine3;
-    private String addressLine4;
-    private String addressLine5;
-    private String contactNo;
+    private String address;
+    private String contact_no;
     private String email;
     private Role role;
     private List<FieldDTO> fields;
-    private List<VehicleDTO> vehicles;
 }

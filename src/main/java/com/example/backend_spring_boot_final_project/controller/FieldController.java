@@ -5,6 +5,7 @@ import com.example.backend_spring_boot_final_project.dto.FieldStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
+import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
 import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.FieldNotFoundException;
@@ -22,29 +23,30 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/field")
+@CrossOrigin
 public class FieldController {
 
     @Autowired
     private FieldService fieldService;
 
 
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void>saveField(@RequestParam("field_name")String fieldName,
-                                         @RequestParam("x") int x,
-                                         @RequestParam("y") int y,
-                                         @RequestParam("extent_size") Double extentSize,
-                                         @RequestPart("field_image_1")MultipartFile image1,
-                                         @RequestPart("field_image_2")MultipartFile image2,
-                                         @RequestPart (value = "crops[]",required = false) List<CropDTO> crops,
-                                         @RequestPart (value = "staff[]",required = false) List<StaffDTO> staff){
+    public ResponseEntity<Void> saveField(@RequestParam("field_name") String fieldName,
+                                          @RequestParam("x") int x,
+                                          @RequestParam("y") int y,
+                                          @RequestParam("extent_size") Double extentSize,
+                                          @RequestPart("field_image_1") MultipartFile image1,
+                                          @RequestPart("field_image_2") MultipartFile image2,
+                                          @RequestPart(value = "crops[]", required = false) List<CropDTO> crops,
+                                          @RequestPart(value = "staff[]", required = false) List<StaffDTO> staff) {
 
-        Point location = new Point(x,y);
-        String base64FieldImage1 ="";
-        String base64FieldImage2 ="";
+        Point location = new Point(x, y);
+        String base64FieldImage1 = "";
+        String base64FieldImage2 = "";
 
 
         try {
@@ -71,13 +73,12 @@ public class FieldController {
             buildFieldDTO.setAllocated_staff(staff);
 
 
-
             fieldService.saveField(buildFieldDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DataPersistException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -86,36 +87,123 @@ public class FieldController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<FieldDTO> getAllField(){
-        return fieldService.getAllField();
+    public List<FieldDTO> getAllFields() {
+        return fieldService.getAllFields();
     }
 
-    @GetMapping(value = "/{fieldCode}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public FieldStatus getSelectedfield(@PathVariable("fieldCode") String field_id){
+    @GetMapping(value = "/{fieldCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public FieldStatus getSelectedfield(@PathVariable("fieldCode") String field_id) {
 
-        if (!Regex.fieldCodeMatcher(field_id)){
-            return new SelectedErrorStatus(1,"field is invalid");
+        if (!Regex.fieldCodeMatcher(field_id)) {
+            return new SelectedErrorStatus(1, "field is invalid");
         }
 
         return fieldService.getField(field_id);
     }
 
     @DeleteMapping(value = "/{fieldCode}")
-    public ResponseEntity<Void>deleteField(@PathVariable("fieldCode") String field_id){
+    public ResponseEntity<Void> deleteField(@PathVariable("fieldCode") String field_id) {
         try {
-            if(!Regex.fieldCodeMatcher(field_id)){
+            if (!Regex.fieldCodeMatcher(field_id)) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             fieldService.deleteField(field_id);
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (FieldNotFoundException e){
+        } catch (FieldNotFoundException e) {
             e.printStackTrace();
 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @GetMapping(value = "getallfieldnames", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getAllFieldName() {
+        List<String> fieldNames = fieldService.getAllFieldNames();
+        return ResponseEntity.ok(fieldNames);
+    }
+
+    @GetMapping(value = "/getfieldcode/{fieldName}")
+    public ResponseEntity<String> getFieldCode(@PathVariable("fieldName") String fieldName) {
+        try {
+            Optional<FieldEntity> fieldEntity = fieldService.findByFieldName(fieldName);
+            return ResponseEntity.ok(fieldEntity.get().getField_code());
+        } catch (FieldNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping(value = "/{fieldName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateField(@PathVariable @RequestParam("field_name") String fieldName,
+                                            @RequestParam("x") int x,
+                                            @RequestParam("y") int y,
+                                            @RequestParam("extent_size") String size,
+                                            @RequestPart("field_image1") MultipartFile fieldImage1,
+                                            @RequestPart("field_image2") MultipartFile fieldImage2,
+                                            @RequestPart(value = "crops[]", required = false) List<CropDTO> crops,
+                                            @RequestPart(value = "staff[]", required = false) List<StaffDTO> staff
+    ) {
+        String base64FieldImage1 = "";
+        String base64FieldImage2 = "";
+        Point location = new Point(x, y);
+        double extentSize = Double.parseDouble(size);
+
+        try {
+            byte[] bytesFieldImage1 = fieldImage1.getBytes();
+            base64FieldImage1 = AppUtil.fieldImageOneToBase64(bytesFieldImage1);
+
+            byte[] bytesFieldImage2 = fieldImage2.getBytes();
+            base64FieldImage2 = AppUtil.fieldImageTwoToBase64(bytesFieldImage2);
+
+            String field_code = AppUtil.generateFieldId();
+
+            FieldDTO buildFieldDTO = new FieldDTO();
+            buildFieldDTO.setField_code(field_code);
+            buildFieldDTO.setField_name(fieldName);
+            buildFieldDTO.setLocation(location);
+            buildFieldDTO.setExtent_size(extentSize);
+            buildFieldDTO.setField_image1(base64FieldImage1);
+            buildFieldDTO.setField_image2(base64FieldImage2);
+            buildFieldDTO.setCrops(crops);
+            buildFieldDTO.setAllocated_staff(staff);
+            fieldService.updateField(fieldName, buildFieldDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (DataPersistException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = {"updatestaff", "/{fieldCode}"})
+    public ResponseEntity<Void> updateAllocatedStaff(@PathVariable("fieldCode") String fieldCode,
+                                                     @RequestBody List<String> staffId) {
+
+        try {
+            if (!Regex.fieldCodeMatcher(fieldCode) || staffId == null || staffId.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            fieldService.updateAllocatedStaff(fieldCode, staffId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (FieldNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
+
