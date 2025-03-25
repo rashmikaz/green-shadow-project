@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -42,15 +43,15 @@ public class CropController {
                                          @RequestParam("crop_image") MultipartFile cropImage,
                                          @RequestParam("category") String category,
                                          @RequestParam("season") String season,
-                                         @RequestParam("field") String fieldDTO
+                                         @RequestParam ("field_name") String field_name
+    ){
 
 
-    ) {
         String base64CropImage = "";
 
         try {
 
-            FieldDTO field = fieldService.getFieldByName(fieldDTO);
+            FieldDTO field = fieldService.getFieldByName(field_name);
 
 
             byte[] bytesCropImage = cropImage.getBytes();
