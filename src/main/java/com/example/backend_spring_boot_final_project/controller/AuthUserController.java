@@ -1,6 +1,5 @@
 package com.example.backend_spring_boot_final_project.controller;
 
-
 import com.example.backend_spring_boot_final_project.dto.impl.UserDTO;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.secure.JWTAuthResponse;
@@ -49,4 +48,5 @@ public class AuthUserController {
     public ResponseEntity<JWTAuthResponse> refreshToken(@RequestParam("existingToken") String existingToken) {
         return ResponseEntity.ok(authService.refreshToken(existingToken));
     }
+
 }
