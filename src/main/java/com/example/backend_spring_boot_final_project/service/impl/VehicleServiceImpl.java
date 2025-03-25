@@ -1,6 +1,8 @@
+
 package com.example.backend_spring_boot_final_project.service.impl;
 
 import com.example.backend_spring_boot_final_project.dao.VehicleDao;
+import com.example.backend_spring_boot_final_project.dto.VehicleStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.VehicleDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.StaffEntity;
@@ -29,11 +31,11 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void vehicleSave(VehicleDTO vehicleDTO){
-           vehicleDTO.setVehicle_code(AppUtil.generateVehicleId());
-           VehicleEntity saveVehicle = vehicleDao.save(mapping.toVehicleEntity(vehicleDTO));
-           if (saveVehicle==null){
-               throw new DataPersistException("Vehicle not saved");
-           }
+        vehicleDTO.setVehicle_code(AppUtil.generateVehicleId());
+        VehicleEntity saveVehicle = vehicleDao.save(mapping.toVehicleEntity(vehicleDTO));
+        if (saveVehicle==null){
+            throw new DataPersistException("Vehicle not saved");
+        }
 
 
     }
@@ -46,6 +48,11 @@ public class VehicleServiceImpl implements VehicleService {
         }else{
             vehicleDao.deleteById(vehicleCode);
         }
+    }
+
+    @Override
+    public void saveVehicle(VehicleDTO vehicleDTO) {
+
     }
 
     @Override
@@ -70,6 +77,11 @@ public class VehicleServiceImpl implements VehicleService {
                     return vehicleDTO;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public VehicleStatus getVehicle(String vehicleCode) {
+        return null;
     }
 
     @Override
