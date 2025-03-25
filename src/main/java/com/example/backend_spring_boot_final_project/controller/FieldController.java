@@ -1,15 +1,13 @@
 package com.example.backend_spring_boot_final_project.controller;
 
-import com.example.backend_spring_boot_final_project.dto.CropStatus;
+
 import com.example.backend_spring_boot_final_project.dto.FieldStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.FieldEntity;
-import com.example.backend_spring_boot_final_project.exception.CropNotFoundException;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.FieldNotFoundException;
-import com.example.backend_spring_boot_final_project.service.CropService;
 import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -191,6 +190,4 @@ public class FieldController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
-
