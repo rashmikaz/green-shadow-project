@@ -1,10 +1,10 @@
 package com.example.backend_spring_boot_final_project.controller;
 
+
 import com.example.backend_spring_boot_final_project.dto.EquipmentStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.EquipmentDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.StaffDTO;
-import com.example.backend_spring_boot_final_project.dto.impl.VehicleDTO;
 import com.example.backend_spring_boot_final_project.entity.impl.EquipmentEntity;
 import com.example.backend_spring_boot_final_project.exception.DataPersistException;
 import com.example.backend_spring_boot_final_project.exception.EquipmentNotFoundException;
@@ -13,10 +13,13 @@ import com.example.backend_spring_boot_final_project.service.FieldService;
 import com.example.backend_spring_boot_final_project.service.StaffService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.Regex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,35 +29,32 @@ import java.util.Optional;
 @RequestMapping("api/v1/equipment")
 @CrossOrigin
 public class EquipmentController {
-
     @Autowired
     private EquipmentService equipmentService;
-
     @Autowired
     private StaffService staffService;
-
     @Autowired
     private FieldService fieldService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO){
-
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO) {
         try {
-          StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirst_name());
-          FieldDTO fieldDTO = fieldService.getFieldByName(equipmentDTO.getAssigned_field().getField_name());
-
-          equipmentDTO.setAssigned_staff(staff);
-          equipmentDTO.setAssigned_field(fieldDTO);
-
-          equipmentService.saveEquipment(equipmentDTO);
-
+            StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirst_name());
+            FieldDTO field = fieldService.getFieldByName(equipmentDTO.getAssigned_field().getField_name());
+            equipmentDTO.setAssigned_staff(staff);
+            equipmentDTO.setAssigned_field(field);
+            equipmentService.saveEquipment(equipmentDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (DataPersistException e){
+        } catch (DataPersistException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping(value = "/{equipmentId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public EquipmentStatus getSelectedEquipment(@PathVariable ("equipmentId") String equipmentId) {
         if (!Regex.equipIdMatcher(equipmentId)) {
@@ -62,6 +62,7 @@ public class EquipmentController {
         }
         return equipmentService.getEquipment(equipmentId);
     }
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EquipmentDTO> getAllEquipments() {
@@ -84,6 +85,7 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PatchMapping(value = "/{equipmentId}")
     public ResponseEntity<Void> updateEquipment(@PathVariable ("equipmentId") String equipmentId,
@@ -107,6 +109,8 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping("/getequipId/{equipmentName}")
     public ResponseEntity<String> getEquipId(@PathVariable("equipmentName") String equipmentName) {
         try {
