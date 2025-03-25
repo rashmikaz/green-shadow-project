@@ -1,5 +1,6 @@
 package com.example.backend_spring_boot_final_project.controller;
 
+
 import com.example.backend_spring_boot_final_project.dto.MonitoringLogStatus;
 import com.example.backend_spring_boot_final_project.dto.impl.CropDTO;
 import com.example.backend_spring_boot_final_project.dto.impl.FieldDTO;
@@ -15,13 +16,18 @@ import com.example.backend_spring_boot_final_project.service.StaffService;
 import com.example.backend_spring_boot_final_project.statuscode.SelectedErrorStatus;
 import com.example.backend_spring_boot_final_project.util.AppUtil;
 import com.example.backend_spring_boot_final_project.util.Regex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,9 +44,8 @@ public class LogController {
     @Autowired
     private StaffService staffService;
 
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveLog(@RequestParam("logDate") String logDate,
+    public ResponseEntity<Void> saveLog(@RequestParam ("logDate") String logDate,
                                         @RequestParam ("logDetails") String logDetails,
                                         @RequestPart ("observedImage") MultipartFile observedImage,
                                         @RequestParam (value = "fields",required = false) List<String> fields,
@@ -88,6 +93,7 @@ public class LogController {
     public List<MonitoringLogDTO> getAllLogs(){
         return logService.getAllLogs();
     }
+
     @DeleteMapping(value = "/{logCode}")
     public ResponseEntity<Void> deleteLog(@PathVariable ("logCode") String logCode){
         try {
@@ -104,6 +110,7 @@ public class LogController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PatchMapping(value = "/{logCode}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateLog(@PathVariable ("logCode") String logCode,
                                           @RequestParam ("logDate") String logDate,
@@ -142,6 +149,7 @@ public class LogController {
         }
 
     }
+
     @GetMapping("/getlogcode/{logDesc}")
     public ResponseEntity<String> getLogCode(@PathVariable("logDesc") String logDesc){
         try {
