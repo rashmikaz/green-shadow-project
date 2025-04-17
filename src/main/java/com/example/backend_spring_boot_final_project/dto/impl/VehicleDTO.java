@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class VehicleDTO {
     private String vehicle_code;
-    private String licensePlateNumber;
-    private String vehicleCategory;
     private String fuelType;
-    private Status status;
+    private String licensePlateNumber;
     private String remarks;
+    private Status status;
+    private String vehicleCategory;
     private StaffDTO assigned_staff;
 }
